@@ -23,9 +23,9 @@
       try {
         const isValidBadge = await badgeValidation(file);
         if (isValidBadge) {
-          alert('The badge is valid!');
+          alert('The badge is good!');
         } else {
-          alert('The badge is not valid.');
+          alert('Invalid badge!');
         }
       } catch (error) {
         console.error('Error validating badge:', error);
@@ -45,16 +45,30 @@
           const png = new DataView(arrayBuffer);
 
           // Check if the size is 512x512
-          const width = png.getUint32(16);
-          const height = png.getUint32(20);
-
-          if (width === 512 && height === 512) {
-            alert("It's the right size!");
-            resolve(true);
-          } else {
-            alert('Invalid size!');
+          if (!badgeSizeCheck(png)) {
             resolve(false);
+            return;
           }
+          
+          // Create a canvas to work with the image
+          const canvas = document.createElement('canvas');
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+
+          // Draw the image on the canvas
+          const imageData = ctx.createImageData(512, 512);
+          imageData.data.set(pngImage);
+          ctx.putImageData(imageData, 0, 0);
+
+          // Check if the non-transparent pixels can fit inside a single circle
+          if (!badgeCircleCheck(ctx)) {
+            resolve(false);
+            return;
+          }
+
+          alert("Badge validation successful!");
+          resolve(true);
         };
 
         reader.onerror = function (error) {
@@ -64,6 +78,57 @@
         reader.readAsArrayBuffer(file);
       });
     }
+
+    function badgeSizeCheck(png) {
+      const width = png.getUint32(16);
+      const height = png.getUint32(20);
+
+      if (width !== 512 || height !== 512) {
+        alert('Wrong size!');
+        return false;
+      } else {
+        alert("Correct size!");
+        return true;
+      }
+    }
+
+  function badgeCircleCheck(ctx) {
+    // Check if the non-transparent pixels can fit inside a single circle
+    const imageDataCheck = ctx.getImageData(0, 0, 512, 512);
+
+    // Find the bounding box of colored pixels
+    let minX = 512;
+    let minY = 512;
+    let maxX = 0;
+    let maxY = 0;
+
+    for (let y = 0; y < 512; y++) {
+      for (let x = 0; x < 512; x++) {
+        const pixelIndex = (y * 512 + x) << 2; // Each pixel takes 4 bytes (RGBA)
+        const alpha = imageDataCheck.data[pixelIndex + 3];
+
+        if (alpha > 0) {
+          minX = Math.min(minX, x);
+          minY = Math.min(minY, y);
+          maxX = Math.max(maxX, x);
+          maxY = Math.max(maxY, y);
+        }
+      }
+    }
+
+    // Calculate the radius needed to cover all colored pixels
+    const radius = Math.max((maxX - minX) / 2, (maxY - minY) / 2);
+
+    // Check if the radius fits within the image size
+    if (radius <= 512 / 2 && radius <= 512 / 2) {
+      alert("It fits!");
+      return true;
+    } else {
+      alert("It does not fit!");
+      return false;
+    }
+  }
+  
   </script>
 
 </body>
