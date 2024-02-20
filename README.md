@@ -8,7 +8,6 @@ JavaScript project designed to seamlessly validate and convert avatar badges. Ou
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
-  - [Usage](#usage)
 - [License](#license)
 
 ## Features
@@ -40,16 +39,7 @@ git clone https://github.com/LeticiaAires/RnD-Software-Engineer-Internship-.git
 ````
 Install dependencies:
 ````
-npm install
-to be updated
-````
-### Usage
-Integrate the basge validator and image converter functions into your project. Here's a quick example:
-````
-// Example code
-const { validateBadge, convertToBadge } = require('avatar-badge-validator');
-
-// code here...
+npm install jpgjs canvas
 ````
 ## License
 This project is licensed under the [Apache License 2.0.](LICENSE) See the [LICENSE](LICENSE) file for details.
