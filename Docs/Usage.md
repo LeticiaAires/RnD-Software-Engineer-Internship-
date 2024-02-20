@@ -1,3 +1,4 @@
+
 # Avatar Badge Validator - Usage Documentation
 
 The Avatar Badge Validator is a JavaScript project designed to validate and convert avatar badges. Follow the instructions below to integrate and use the provided functions in your project.
@@ -68,10 +69,3 @@ The Avatar Badge Validator is a JavaScript project designed to validate and conv
 ## License
 
 This project is licensed under the [Apache License](LICENSE). See the [LICENSE](LICENSE) file for details.
-
----
-
-For any questions or issues, please reach out to us. Happy coding! 🚀
-```
-
-Feel free to customize this documentation further based on the specific features and functionalities of your project.
