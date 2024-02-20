@@ -53,3 +53,4 @@ const { validateBadge, convertToBadge } = require('avatar-badge-validator');
 ````
 ## License
 This project is licensed under the [Apache License 2.0.](LICENSE) See the [LICENSE](LICENSE) file for details.
+
