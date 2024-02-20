@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badge Validation Test</title>
+</head>
+<body>
+
+  <input type="file" accept="image/png" id="badgeInput" />
+  <button onclick="validateBadge()">Validate Badge</button>
+
+  <script>
+    async function validateBadge() {
+      const input = document.getElementById('badgeInput');
+      const file = input.files[0];
+
+      if (!file) {
+        alert('Please select a PNG image file.');
+        return;
+      }
+
+      try {
+        const isValidBadge = await badgeValidation(file);
+        if (isValidBadge) {
+          alert('The badge is valid!');
+        } else {
+          alert('The badge is not valid.');
+        }
+      } catch (error) {
+        console.error('Error validating badge:', error);
+        alert('An error occurred while validating the badge.');
+      }
+    }
+
+    async function badgeValidation(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = function () {
+          const arrayBuffer = this.result;
+          const pngImage = new Uint8Array(arrayBuffer);
+
+          // Read the PNG file
+          const png = new DataView(arrayBuffer);
+
+          // Check if the size is 512x512
+          const width = png.getUint32(16);
+          const height = png.getUint32(20);
+
+          if (width === 512 && height === 512) {
+            alert("It's the right size!");
+            resolve(true);
+          } else {
+            alert('Invalid size!');
+            resolve(false);
+          }
+        };
+
+        reader.onerror = function (error) {
+          reject(error);
+        };
+
+        reader.readAsArrayBuffer(file);
+      });
+    }
+  </script>
+
+</body>
+</html>
